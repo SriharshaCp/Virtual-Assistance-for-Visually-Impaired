@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Vision</string>
+    <string name="current_date_and_time">Current Date and Time</string>
+    <string name="battery_status">Battery Status</string>
+    <string name="battery_percentage">Battery Percentage</string>
+    <string name="banner_adunit_id">ca-app-pub-3940256099942544/6300978111</string>
+</resources>

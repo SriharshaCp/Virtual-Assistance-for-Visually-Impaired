@@ -1,0 +1,117 @@
+package com.example.vision
+
+import android.content.Intent
+
+import android.os.Build
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
+import android.speech.tts.TextToSpeech
+
+import android.view.View
+
+import android.widget.Toast
+import androidx.annotation.RequiresApi
+
+import kotlinx.android.synthetic.main.activity_main.*
+import java.lang.IllegalArgumentException
+import java.util.*
+import com.google.android.gms.ads.MobileAds
+
+
+
+class MainActivity : AppCompatActivity(), View.OnClickListener,
+        View.OnLongClickListener,
+        TextToSpeech.OnInitListener {
+
+private var tts: TextToSpeech? = null
+
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            setContentView(R.layout.activity_main)
+            MobileAds.initialize(this) {}
+
+            tts = TextToSpeech(this, this)
+
+            //val text = "Welcome to Vision.Single tap for details and long press to open an activity."
+
+            //speak(text)
+
+            msgBox.setOnClickListener(this)
+            phoneMngr.setOnClickListener(this)
+            timeDate.setOnClickListener(this)
+            cameracard.setOnClickListener(this)
+            weather.setOnClickListener(this)
+            currency.setOnClickListener(this)
+
+            msgBox.setOnLongClickListener(this)
+            phoneMngr.setOnLongClickListener(this)
+            timeDate.setOnLongClickListener(this)
+            cameracard.setOnLongClickListener(this)
+            weather.setOnLongClickListener(this)
+            currency.setOnLongClickListener(this)
+
+
+            }
+
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    override fun onClick(view: View) {
+            val text = when (view.id) {
+            R.id.msgBox -> "You clicked messaging!"
+            R.id.phoneMngr -> "You clicked phone manager!"
+            R.id.timeDate -> "You clicked Time/Date and Battery status!"
+            R.id.weather -> "You clicked weather"
+            R.id.currency -> "you clicked currency identifier"
+                    R.id.cameracard -> "you clicked location"
+            else -> throw IllegalArgumentException("Undefined Clicked")
+
+            }
+            Toast.makeText(this, text, Toast.LENGTH_SHORT).show()
+            speak(text)
+
+            }
+
+            override fun onLongClick(view: View): Boolean {
+            val intent = when (view.id) {
+            R.id.msgBox -> Intent(this, MessageActivity::class.java)
+        R.id.phoneMngr -> Intent(this, PhoneActivity::class.java)
+        R.id.timeDate -> Intent(this, TimeDateActivity::class.java)
+        R.id.weather -> Intent(this, com.example.vision.weather::class.java)
+        R.id.currency -> Intent(this,com.example.vision.currency ::class.java)
+                    R.id.cameracard -> Intent(this,location ::class.java)
+        //R.id.cameraCard -> Intent(this, Camera::class.java)
+        else -> throw IllegalArgumentException("Undefined Clicked")
+        }
+        startActivity(intent)
+        return true
+        }
+
+@RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+private fun speak(text: String) {
+
+        tts?.speak(text, TextToSpeech.QUEUE_FLUSH, null, null)
+
+        }
+
+        override fun onInit(status: Int) {
+        if (status == TextToSpeech.SUCCESS) {
+        tts!!.language = Locale.US
+        tts?.speak(
+        "Welcome to Vision.Single tap for details and long press to open an activity.",
+        TextToSpeech.QUEUE_FLUSH, null, null
+        )
+        }
+        }
+
+public override fun onDestroy() {
+        // Shutdown TTS
+        if (tts != null) {
+        tts!!.stop()
+        tts!!.shutdown()
+        }
+        super.onDestroy()
+        }
+        }
+
+
+
